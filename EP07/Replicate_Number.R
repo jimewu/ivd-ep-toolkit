@@ -1,0 +1,42 @@
+#Part 0. Preparations: configuration area
+#Load package needed
+Packages <- c("dplyr", "ggplot2", "Rmisc", "knitr")
+lapply(Packages, library, character.only = TRUE)
+
+DIR <- "analysis"
+setwd("~")
+WD <- getwd()
+WD <- paste(WD, DIR, sep = "/")
+setwd(WD)
+
+#Read setting for analysis
+SET <- read.csv("setting.csv")
+alpha <- SET$EP7.Alpha
+beta <- SET$EP7.Beta
+rtio <- SET$EP7.MP_rep / SET$EP7.Allowable_interference
+
+
+
+
+
+#2-sided
+N.2s <- 2 * ((qnorm(1-alpha/2) + qnorm(1-beta)) * rtio )^2
+if (N.2s >= 5){
+  N.2s <- ceiling(N.2s)
+}else{
+  N.2s <- 5
+}
+
+#1-sided
+N.1s <- 2 * ( (qnorm(1-alpha) + qnorm(1-beta) ) * rtio )^2
+if (N.1s >= 5){
+  N.1s <- ceiling(N.1s)
+}else{
+  N.1s <- 5
+}
+
+
+sink("Determine_Replicate_Number.txt")
+paste("for two-sided test: N =", N.2s, sep = " ")
+paste("for one-sided test: N =", N.1s, sep = " ")
+sink()
