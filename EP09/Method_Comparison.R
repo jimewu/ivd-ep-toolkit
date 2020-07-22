@@ -39,7 +39,7 @@ ggsave("Scatter_Plot.png",
 
 #Plot difference with marginal
 DAT$Diff <- DAT$MP.test - DAT$MP.comp
-DAT$Diff.P <- DAT$Diff / DAT$MP.comp
+DAT$Diff.P <- 100* DAT$Diff / DAT$MP.comp
 
 PLT.Diff <- ggplot(DAT,aes(x = MP.comp, y = Diff)  ) +
   geom_point() +
