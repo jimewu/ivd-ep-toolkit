@@ -1,2 +1,2 @@
-FIG_W_CM,FIG_H_CM,FIG_DPI,EP5.Acceptance_Criteria,EP6.Acceptance_Criteria,EP7.Alpha,EP7.Beta,EP7.MP_rep,EP7.Allowable_interference,EP9.Error_Ratio,EP9.alpha,EP17.Alpha,EP17.Beta,EP17.Precision_Profile_LOB,EP17.TE.goal,EP17.Perc.CV.goal,EP25.Allowable_drift
-12,9,300,0.05,0.05,0.05,0.2,0.05,0.05,1,0.05,0.05,0.05,0.51,21.6,10,0.05
+FIG_W_CM,FIG_H_CM,FIG_DPI,EP5.Acceptance_Criteria,EP6.Acceptance_Criteria,EP7.Alpha,EP7.Beta,EP7.MP_rep,EP7.Allowable_interference,EP9.Error_Ratio,EP9.alpha,EP17.Alpha,EP17.Beta,EP17.Precision_Profile_LOB,EP17.TE.goal,EP17.CV.goal,EP25.Allowable_drift
+12,9,300,0.05,0.05,0.05,0.2,0.05,0.05,1,0.05,0.05,0.05,0.51,0.216,0.1,0.05

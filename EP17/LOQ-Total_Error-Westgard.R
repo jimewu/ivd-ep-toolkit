@@ -12,6 +12,7 @@ setwd(WD)
 #Read setting for analysis
 SET <- read.csv("setting.csv")
 TE.goal <- SET$EP17.TE.goal
+TE.goal <- TE.goal * 100
 
 #Configuration for figures to be exported
 FIG_W_CM <- SET$FIG_W_CM #Figure width in cm
@@ -22,21 +23,6 @@ FIG_DPI <- SET$FIG_DPI #Figure resolution
 FILE <- "data.csv" #file-name containing data
 DAT <- read.csv(FILE)
 DAT <- na.omit(DAT)
-
-# #Part 0. Preparations: configuration area
-# #Acceptance_Criteria for differences in linear regression
-# TE.goal <- 21.6
-# 
-# #Set working directory where contains this script and .csv data file
-# WD <- "/home/jimewu/文件/CLSI文件/EP17A2E_Analytical Sensitivity/實做/"
-# setwd(WD)
-# FILE <- "data.csv" #Name of .csv file containing data to be analyzed
-# 
-# #Load package needed
-# Packages <- c("dplyr", "ggplot2", "chemCal")
-# lapply(Packages, library, character.only = TRUE)
-# 
-# DAT <- read.csv(FILE) #Read data and assign as DAT data.frame
 
 #Part 1. 依照Sample_Name * Reagent_Lot分組
 DAT$Name.Lot <- paste(DAT$Sample_Name, DAT$Reagent_Lot)

@@ -12,6 +12,7 @@ setwd(WD)
 #Read setting for analysis
 SET <- read.csv("setting.csv")
 TE.goal <- SET$EP17.TE.goal
+TE.goal <- TE.goal * 100
 
 #Configuration for figures to be exported
 FIG_W_CM <- SET$FIG_W_CM #Figure width in cm
