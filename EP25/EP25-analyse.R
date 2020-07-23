@@ -1,6 +1,6 @@
 #Part 0. Preparations: configuration area
 #Load package needed
-Packages <- c("dplyr", "ggplot2")
+Packages <- c("dplyr", "ggplot2", "knitr")
 lapply(Packages, library, character.only = TRUE)
 
 DIR <- "analysis"
