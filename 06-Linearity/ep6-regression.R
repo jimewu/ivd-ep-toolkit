@@ -146,19 +146,6 @@ colnames(Table_1st_vs_3rd) <- c("Dilution", "Mean",
                                 "Regression_Diff", "Regression_Perc_Diff",
                                 "Regression_Diff_H_Goal", 
                                 "Regression_Diff_L_Goal")
-# Table_1st_vs_3rd <- DAT %>% group_by(dilution) %>% 
-#   summarize(Mean = mean(y), 
-#             Difference = abs(diff(y)),
-#             SQDF = (Difference^2)/2,
-#             Perc_D = 100* Difference / Mean,
-#             SQ_Perc_D = (Perc_D^2)/2,
-#             Predicted_1st = mean(P1),
-#             Predicted_3rd = mean(P3),
-#             Regression_Diff = (Predicted_3rd - Predicted_1st),
-#             Regression_Perc_Diff = 100 * Regression_Diff / Predicted_1st,
-#             Regression_Diff_H_Goal = Mean * (Acceptance_Criteria),
-#             Regression_Diff_L_Goal = Mean * (Acceptance_Criteria) * -1 )
-
 
 RPRT.T1V3 <- Table_1st_vs_3rd
 
