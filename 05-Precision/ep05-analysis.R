@@ -1,6 +1,6 @@
 #Part 0. Preparations: configuration area
 #Load package needed
-Packages <- c("dplyr", "ggplot2", "VCA")
+Packages <- c("dplyr", "ggplot2", "VCA", "knitr")
 lapply(Packages, library, character.only = TRUE)
 
 DIR <- "analysis"
@@ -59,7 +59,7 @@ ggsave("Levey-Jennings.png",
 RSLT <- anovaVCA(y~Var1/Var2,DAT)
 
 #calculate confidence interval
-INTF <- VCAinference(RSLT, total.claim=3.5, error.claim=2)
+INTF <- VCAinference(RSLT)
 
 sink("Report_SD_CV.txt")
 RSLT

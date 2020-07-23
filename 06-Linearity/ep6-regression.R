@@ -95,6 +95,8 @@ colnames(Table_1st_vs_2nd) <- c("Dilution", "Mean",
 
 
 POOL.RP <- Table_1st_vs_2nd %>% summarize(Pooled_Repeatability = sqrt(mean(SQ_Perc_D)))
+colnames(POOL.RP) <- c("Pooled_Repeatability(%)")
+
 sink("(QC)Sample_Pooled_Repeatability.txt")
 print(POOL.RP)
 sink()
