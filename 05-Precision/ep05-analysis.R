@@ -1,8 +1,8 @@
-#Part 0. Preparations: configuration area
 #Load package needed
 Packages <- c("dplyr", "ggplot2", "VCA", "knitr")
 lapply(Packages, library, character.only = TRUE)
 
+#Set working directory
 DIR <- "analysis"
 setwd("~")
 WD <- getwd()
@@ -10,37 +10,47 @@ WD <- paste(WD, DIR, sep = "/")
 setwd(WD)
 
 #Read setting for analysis
-SET <- read.csv("setting.csv")
+SET <- read.csv("setting.csv") #setting file name
 Acceptance_Criteria = SET$EP5.Acceptance_Criteria
 
-
-#Configuration for figures to be exported
+#Configure specs for figures to be exported
 FIG_W_CM <- SET$FIG_W_CM #Figure width in cm
 FIG_H_CM <- SET$FIG_H_CM #Figure height in cm
 FIG_DPI <- SET$FIG_DPI #Figure resolution
 
 #Read data and assign as DAT data.frame
-FILE <- "data.csv" #file-name containing data
-DAT <- read.csv(FILE)
-DAT <- na.omit(DAT)
+FILE <- "data.csv" #specify file-name containing data
+DAT <- read.csv(FILE) #read file and set as DAT
+DAT <- na.omit(DAT) #remove NA values
 
 #for precision estimates
 #Draw Levey-Jennings chart
 MN <- mean(DAT$y)
 SD <- sd(DAT$y)
-DAT$y.sd <- (DAT$y - MN) / SD
+DAT$y.sd <- (DAT$y - MN) / SD #Calculate y in scale of SD
 
+#Scatterplot in original scale
 P1 <- DAT %>% ggplot(aes(x = Var1) ) +
-  geom_point(aes(y = y, color = factor(Var2), shape = factor(Rep) )) + 
-  labs(title = "Measurement results", shape = "Replicate", color = "Var2") +
-  theme(plot.title = element_text(hjust = 0.5))
+  geom_point(aes(y = y, 
+                 color = factor(Var2), 
+                 shape = factor(Rep) )) + 
+  labs(title = "Measurement results", 
+       shape = "Replicate", 
+       color = "Var2") +
+  theme(plot.title = element_text(hjust = 0.5)) #Center title
 
+#Levey Jennings plot
 LJ <- DAT %>% ggplot(aes(x = Var1) ) +
-  geom_point(aes(y = y.sd, color = factor(Var2), shape = factor(Rep) ) ) + 
-  labs(title = "Levey-Jennings", shape = "Replicate", 
-       color = "Var2", y = "SD") +
-  theme(plot.title = element_text(hjust = 0.5))
+  geom_point(aes(y = y.sd, 
+                 color = factor(Var2), 
+                 shape = factor(Rep) ) ) + 
+  labs(title = "Levey-Jennings", 
+       shape = "Replicate", 
+       color = "Var2", 
+       y = "SD") +
+  theme(plot.title = element_text(hjust = 0.5)) #Center title
 
+#Save plot using specs as setting
 ggsave("Measurement_Results.png", 
        plot = P1,
        units = "cm",
@@ -55,13 +65,64 @@ ggsave("Levey-Jennings.png",
        height = FIG_H_CM,
        dpi = FIG_DPI) #save as .png file
 
-#nested ANOVA of day/run
+#Calculate result of nested ANOVA of day/run
 RSLT <- anovaVCA(y~Var1/Var2,DAT)
 
 #calculate confidence interval
 INTF <- VCAinference(RSLT)
 
+#Convert RSLT to matrix
+RSLT <- RSLT %>% as.matrix.VCA
+CV.total <- RSLT[1,7]
+if (CV.total <= 100 * Acceptance_Criteria){
+  RPRT.total <- paste("Total %CV <= acceptance critera:", 
+                      100 * Acceptance_Criteria,
+                      "% (PASS)", sep = "")
+}else{
+  RPRT.total <- paste("Total %CV > acceptance critera:", 
+                      100 * Acceptance_Criteria,
+                      "% (FAIL)", sep = "")
+}
+
+CV.V1 <- RSLT[2,7]
+if (CV.V1 <= 100 * Acceptance_Criteria){
+  RPRT.V1 <- paste("%CV of Var1 <= acceptance critera:", 
+                      100 * Acceptance_Criteria,
+                      "% (PASS)", sep = "")
+}else{
+  RPRT.V1 <- paste("%CV of Var1 > acceptance critera:", 
+                      100 * Acceptance_Criteria,
+                      "% (FAIL)", sep = "")
+}
+
+CV.V2 <- RSLT[3,7]
+if (CV.V2 <= 100 * Acceptance_Criteria){
+  RPRT.V2 <- paste("%CV of Var2 <= acceptance critera:", 
+                   100 * Acceptance_Criteria,
+                   "% (PASS)", sep = "")
+}else{
+  RPRT.V2 <- paste("%CV of Var2 > acceptance critera:", 
+                   100 * Acceptance_Criteria,
+                   "% (FAIL)", sep = "")
+}
+
+CV.REP <- RSLT[4,7]
+if (CV.REP <= 100 * Acceptance_Criteria){
+  RPRT.REP <- paste("%CV of Var1 <= acceptance critera:", 
+                   100 * Acceptance_Criteria,
+                   "% (PASS)", sep = "")
+}else{
+  RPRT.REP <- paste("%CV of Var1 > acceptance critera:", 
+                   100 * Acceptance_Criteria,
+                   "% (FAIL)", sep = "")
+}
+
+
 sink("Report_SD_CV.txt")
+RPRT.total
+RPRT.V1
+RPRT.V2
+RPRT.REP
 RSLT
 sink()
 
