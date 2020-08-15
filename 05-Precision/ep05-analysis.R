@@ -3,7 +3,9 @@ Packages <- c("dplyr", "ggplot2", "VCA", "knitr")
 lapply(Packages, library, character.only = TRUE)
 
 #Set working directory
-DIR <- "analysis"
+DIR <- "ivd-ep-toolkit/05-Precision"
+TIME <- format(Sys.time(), "%Y-%m-%d-%H-%M-%S")
+RPRT.DIR <- paste("Report", TIME, sep = "_")
 setwd("~")
 WD <- getwd()
 WD <- paste(WD, DIR, sep = "/")
@@ -49,21 +51,6 @@ LJ <- DAT %>% ggplot(aes(x = Var1) ) +
        color = "Var2", 
        y = "SD") +
   theme(plot.title = element_text(hjust = 0.5)) #Center title
-
-#Save plot using specs as setting
-ggsave("Measurement_Results.png", 
-       plot = P1,
-       units = "cm",
-       width = FIG_W_CM,
-       height = FIG_H_CM,
-       dpi = FIG_DPI) #save as .png file
-
-ggsave("Levey-Jennings.png", 
-       plot = LJ,
-       units = "cm",
-       width = FIG_W_CM,
-       height = FIG_H_CM,
-       dpi = FIG_DPI) #save as .png file
 
 #Calculate result of nested ANOVA of day/run
 RSLT <- anovaVCA(y~Var1/Var2,DAT)
@@ -118,6 +105,29 @@ if (CV.REP <= 100 * Acceptance_Criteria){
 }
 
 
+## Save report files
+#Create working directory
+dir.create(RPRT.DIR)
+
+#Set working directory
+RPRT.DIR <- paste(WD, RPRT.DIR, sep = "/")
+setwd(RPRT.DIR)
+
+#Save plot using specs as setting
+ggsave("Measurement_Results.png", 
+       plot = P1,
+       units = "cm",
+       width = FIG_W_CM,
+       height = FIG_H_CM,
+       dpi = FIG_DPI) #save as .png file
+
+ggsave("Levey-Jennings.png", 
+       plot = LJ,
+       units = "cm",
+       width = FIG_W_CM,
+       height = FIG_H_CM,
+       dpi = FIG_DPI) #save as .png file
+
 sink("Report_SD_CV.txt")
 RPRT.total
 RPRT.V1
@@ -129,5 +139,3 @@ sink()
 sink("Report_CI.txt")
 INTF
 sink()
-
-
