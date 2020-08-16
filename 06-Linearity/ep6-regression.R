@@ -1,7 +1,10 @@
 #Part 0. Preparations: configuration area
 #Set working directory if WD has not been set
 
-DIR <- "analysis"
+#Set working directory
+DIR <- "ivd-ep-toolkit/06-Linearity"
+TIME <- format(Sys.time(), "%Y-%m-%d-%H-%M-%S")
+RPRT.DIR <- paste("Report", TIME, sep = "_")
 setwd("~")
 WD <- getwd()
 WD <- paste(WD, DIR, sep = "/")
@@ -11,6 +14,7 @@ setwd(WD)
 SET <- read.csv("setting.csv")
 #Acceptance_Criteria for differences in linear regression
 Acceptance_Criteria = SET$EP6.Acceptance_Criteria
+N.RND <- SET$Max.N.Small
 
 #Configuration for figures to be exported
 FIG_W_CM <- SET$FIG_W_CM #Figure width in cm
@@ -21,14 +25,6 @@ FIG_DPI <- SET$FIG_DPI #Figure resolution
 FILE <- "data.csv" #file-name containing data
 DAT <- read.csv(FILE)
 
-
-
-
-
-
-
-
-
 #Part 1. Polynomial regression
 #Load package needed
 Packages <- c("dplyr", "ggplot2")
@@ -37,18 +33,6 @@ lapply(Packages, library, character.only = TRUE)
 RGS1 <- lm(y ~ poly(dilution, 1, raw = TRUE), DAT) #1st order regression
 RGS2 <- lm(y ~ poly(dilution, 2, raw = TRUE), DAT) #2nd order regression
 RGS3 <- lm(y ~ poly(dilution, 3, raw = TRUE), DAT) #3rd order regression
-
-sink("(1st)Results_of_Regression_Analysis.txt") #save to .txt file
-summary(RGS1)
-sink()
-
-sink("(2nd)Results_of_Regression_Analysis.txt") #save to .txt file
-summary(RGS2)
-sink()
-
-sink("(3rd)Results_of_Regression_Analysis.txt") #save to .txt file
-summary(RGS3)
-sink()
 
 DAT <- DAT %>% mutate(P1 = predict(RGS1),
                       P2 = predict(RGS2),
@@ -97,21 +81,12 @@ colnames(Table_1st_vs_2nd) <- c("Dilution", "Mean",
 POOL.RP <- Table_1st_vs_2nd %>% summarize(Pooled_Repeatability = sqrt(mean(SQ_Perc_D)))
 colnames(POOL.RP) <- c("Pooled_Repeatability(%)")
 
-sink("(QC)Sample_Pooled_Repeatability.txt")
-print(POOL.RP)
-sink()
-
 RPRT.T1V2 <- Table_1st_vs_2nd
 colnames(RPRT.T1V2) <- c("Dilution", "y.Mean", "y.Diff", "y.Squared_Diff",
                                 "y.%Diff", "y.Squared_%Diff", "Regression.1st",
                                 "Regression.2nd", "Regression.Diff",
                                 "Regression.%Diff", "Regression.upper_Criteria",
                                 "Regression.lower_Criteria")
-
-write.csv(RPRT.T1V2, 
-          file = "(1st_vs_2nd)Table.csv") #export as .csv file
-
-
 
 Table_1st_vs_3rd <- data.frame()
 
@@ -155,10 +130,6 @@ colnames(RPRT.T1V3) <- c("Dilution", "y.Mean", "y.Diff", "y.Squared_Diff",
                                 "Regression.%Diff", "Regression.upper_Criteria",
                                 "Regression.lower_Criteria")
 
-write.csv(RPRT.T1V3, 
-          file = "(1st_vs_3rd)Table.csv") #export as .csv file
-
-
 #Part 3. Draw regression plots
 #P1 is basic data with 1st order regression
 P1 <- ggplot(DAT, aes(x = dilution) ) + 
@@ -170,23 +141,9 @@ P1_vs_2 <- P1 +
   geom_smooth(aes(y = predict(RGS2), color = "2nd"), linetype=2) +
   labs(x = "Relative Concentration", y = "Measurement Value",color = "Regression")
 
-ggsave("(1st_vs_2nd)Linearity_Study.png", 
-       plot = P1_vs_2,
-       units = "cm",
-       width = FIG_W_CM,
-       height = FIG_H_CM,
-       dpi = FIG_DPI) #save as .png file
-
 P1_vs_3 <- P1 +
   geom_smooth(aes(y = predict(RGS3), color = "3rd"), linetype=2) + 
   labs(x = "Relative Concentration", y = "Measurement Value",color = "Regression")
-
-ggsave("(1st_vs_3rd)Linearity_Study.png", 
-       plot = P1_vs_3,
-       units = "cm",
-       width = FIG_W_CM,
-       height = FIG_H_CM,
-       dpi = FIG_DPI) #save as .png file
 
 #Part 4. Draw difference plot
 D1_vs_2 <- ggplot(Table_1st_vs_2nd, aes(x = Mean) ) + 
@@ -195,22 +152,68 @@ D1_vs_2 <- ggplot(Table_1st_vs_2nd, aes(x = Mean) ) +
   geom_line(aes(y = Regression_Diff_L_Goal, color = "Low Goal"), linetype = 2 ) +
   labs(title = "Difference Plot: 1st VS 2nd", y = "Difference of Regression", fill = "", color = "Acceptance Criteria")
 
-
-ggsave("(1st_vs_2nd)Difference_Plot.png", 
-       plot = D1_vs_2,
-       units = "cm",
-       width = FIG_W_CM,
-       height = FIG_H_CM,
-       dpi = FIG_DPI) #save as .png file
-
-
 D1_vs_3 <- ggplot(Table_1st_vs_3rd, aes(x = Mean) ) + 
   geom_point(aes(y = Regression_Diff, fill = "Difference")) +
   geom_line(aes(y = Regression_Diff_H_Goal, color = "High Goal"), linetype = 2 ) +
   geom_line(aes(y = Regression_Diff_L_Goal, color = "Low Goal"), linetype = 2 ) +
   labs(title = "Difference Plot: 1st VS 3rd", y = "Difference of Regression", fill = "", color = "Acceptance Criteria")
 
-ggsave("(1st_vs_3rd)Difference_Plot.png", 
+## Save report files
+#Create working directory
+dir.create(RPRT.DIR)
+
+#Set working directory
+RPRT.DIR <- paste(WD, RPRT.DIR, sep = "/")
+setwd(RPRT.DIR)
+
+sink("(1st)Results_of_Regression_Analysis.txt") #save to .txt file
+summary(RGS1)
+sink()
+
+sink("(2nd)Results_of_Regression_Analysis.txt") #save to .txt file
+summary(RGS2)
+sink()
+
+sink("(3rd)Results_of_Regression_Analysis.txt") #save to .txt file
+summary(RGS3)
+sink()
+
+sink("(QC)Sample_Pooled_Repeatability.txt")
+print(POOL.RP)
+sink()
+
+#set maximal number of digits after the dot according to N.RND
+RPRT.T1V2 <- RPRT.T1V2 %>% round(N.RND)
+RPRT.T1V3 <- RPRT.T1V3 %>% round(N.RND)
+
+write.csv(RPRT.T1V2,
+          file = "(1st_vs_2nd)Table.csv") #export as .csv file
+
+write.csv(RPRT.T1V3,
+          file = "(1st_vs_3rd)Table.csv") #export as .csv file
+
+ggsave("(1st_vs_2nd)Linearity_Study.png",
+       plot = P1_vs_2,
+       units = "cm",
+       width = FIG_W_CM,
+       height = FIG_H_CM,
+       dpi = FIG_DPI) #save as .png file
+
+ggsave("(1st_vs_3rd)Linearity_Study.png",
+       plot = P1_vs_3,
+       units = "cm",
+       width = FIG_W_CM,
+       height = FIG_H_CM,
+       dpi = FIG_DPI) #save as .png file
+
+ggsave("(1st_vs_2nd)Difference_Plot.png",
+       plot = D1_vs_2,
+       units = "cm",
+       width = FIG_W_CM,
+       height = FIG_H_CM,
+       dpi = FIG_DPI) #save as .png file
+
+ggsave("(1st_vs_3rd)Difference_Plot.png",
        plot = D1_vs_3,
        units = "cm",
        width = FIG_W_CM,

@@ -25,4 +25,11 @@
 1. 執行"ep05-analysis.R"
 
 ## 報告
-1. 程式執行完成後，應該會產生報告資料夾，名稱類似於"Report-YYYY-MM-DD-hh-mm-ss"
+1. 程式執行完成後，應該會產生報告資料夾，名稱類似於"Report-YYYY-MM-DD-hh-mm-ss"，其中包含以下檔案:
+	- Measurement_Results.png：為原始結果所作的散佈圖 (scatter plot)，橫軸為Var1，縱軸為測量值y, 每個點依照Var2分成不同顏色，並依照Replicate分成不同形狀
+	- Levey-Jennings.png: 類似於Measurement_Results.png，但是縱軸改為從結果計算出之標準差(SD)以方便找出outliers
+	- Report.txt: 
+		- Summary: 各變數(Total, Var1, Var2, Replicate)是否有通過acceptance criteria (在setting.csv中設定的百分比)
+		- Result of ANOVA: nested-ANOVA計算結果
+		- Confidence Interval in SD: Total 以及replicate (error)的confidence interval, 以SD呈現
+		- Confidence Interval in %CV: Total 以及replicate (error)的confidence interval, 以%CV呈現

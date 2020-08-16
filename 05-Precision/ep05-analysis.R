@@ -95,11 +95,11 @@ if (CV.V2 <= 100 * Acceptance_Criteria){
 
 CV.REP <- RSLT[4,7]
 if (CV.REP <= 100 * Acceptance_Criteria){
-  RPRT.REP <- paste("%CV of Var1 <= acceptance critera:", 
+  RPRT.REP <- paste("%CV of Replicate <= acceptance critera:", 
                    100 * Acceptance_Criteria,
                    "% (PASS)", sep = "")
 }else{
-  RPRT.REP <- paste("%CV of Var1 > acceptance critera:", 
+  RPRT.REP <- paste("%CV of Replicate > acceptance critera:", 
                    100 * Acceptance_Criteria,
                    "% (FAIL)", sep = "")
 }
@@ -128,14 +128,17 @@ ggsave("Levey-Jennings.png",
        height = FIG_H_CM,
        dpi = FIG_DPI) #save as .png file
 
-sink("Report_SD_CV.txt")
+sink("Report.txt")
+print("=============================Summary=============================")
 RPRT.total
 RPRT.V1
 RPRT.V2
 RPRT.REP
+print("==========================Result of ANOVA==========================")
 RSLT
-sink()
-
-sink("Report_CI.txt")
-INTF
+print("=====================Confidence Interval in SD=====================")
+INTF$ConfInt$SD
+print("=====================Confidence Interval in %CV=====================")
+INTF$ConfInt$CV
+print("============================End of Report============================")
 sink()

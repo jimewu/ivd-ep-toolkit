@@ -27,3 +27,11 @@
 
 ## Report
 1. After the result has been calculated by the program, a report folder containing results can be found with the name similar to "Report-YYYY-MM-DD-hh-mm-ss".
+2. Files can be found in the report folder and their meaning:
+	- Measurement_Results.png: Scatter plot of the original data. The X-axis is Var1, and the Y-axis is the measurement value (y). Each dot is further grouped into different colors and shapes according to its respective Var2 and Replicate.
+	- Levey-Jennings.png: Almost the same as Measurement_Results.png, with only one difference that the Y-axis is the standard deviation (SD) which is convenient to find outliers.
+	- Report.txt:
+		- Summary: the brief description that whether a parameter (Total, Var1, Var2, and Replicate) is within the acceptance criteria (the percentage number set in the setting.csv)
+		- Result of ANOVA: the result of nested-ANOVA
+		- Confidence interval in SD: the confidence interval of total and replicate (error) parameter in SD
+		- Confidence interval in %CV: the confidence interval of total and replicate (error) parameter in %CV
