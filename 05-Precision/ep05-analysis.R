@@ -4,7 +4,7 @@ lapply(Packages, library, character.only = TRUE)
 
 #Set working directory
 DIR <- "ivd-ep-toolkit/05-Precision"
-TIME <- format(Sys.time(), "%Y-%m-%d-%H-%M-%S")
+TIME <- format(Sys.time(), "%Y-%m%d-%H%M%S")
 RPRT.DIR <- paste("Report", TIME, sep = "_")
 setwd("~")
 WD <- getwd()

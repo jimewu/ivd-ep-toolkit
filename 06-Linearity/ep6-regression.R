@@ -3,7 +3,7 @@
 
 #Set working directory
 DIR <- "ivd-ep-toolkit/06-Linearity"
-TIME <- format(Sys.time(), "%Y-%m-%d-%H-%M-%S")
+TIME <- format(Sys.time(), "%Y-%m%d-%H%M%S")
 RPRT.DIR <- paste("Report", TIME, sep = "_")
 setwd("~")
 WD <- getwd()
