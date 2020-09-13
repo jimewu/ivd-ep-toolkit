@@ -3,7 +3,10 @@
 Packages <- c("dplyr", "ggplot2", "chemCal")
 lapply(Packages, library, character.only = TRUE)
 
-DIR <- "analysis"
+#Set working directory
+DIR <- "ivd-ep-toolkit/17-Analytical-Sensitivity"
+TIME <- format(Sys.time(), "%Y-%m%d-%H%M%S")
+RPRT.DIR <- paste("Report_for_LOQ-Precision-Profile", TIME, sep = "_")
 setwd("~")
 WD <- getwd()
 WD <- paste(WD, DIR, sep = "/")
@@ -25,6 +28,13 @@ FILE <- "data.csv" #file-name containing data
 DAT <- read.csv(FILE)
 DAT <- na.omit(DAT)
 DAT$CV <- 100 * DAT$SD.WL / DAT$Mean
+
+#Create Report Directory
+dir.create(RPRT.DIR)
+
+#Set working directory to Report Directory
+RPRT.DIR <- paste(WD, RPRT.DIR, sep = "/")
+setwd(RPRT.DIR)
 
 LOT <- c()
 LOQ <- c()

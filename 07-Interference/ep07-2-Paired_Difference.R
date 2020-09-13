@@ -29,6 +29,13 @@ FILE <- "data.csv" #file-name containing data
 DAT <- read.csv(FILE)
 DAT <- na.omit(DAT)
 
+#Create Report Directory
+dir.create(RPRT.DIR)
+
+#Set working directory to Report Directory
+RPRT.DIR <- paste(WD, RPRT.DIR, sep = "/")
+setwd(RPRT.DIR)
+
 #Split DAT by Sample and calculate CI for Diff and Diff.p
 DAT.SPL <- DAT %>% split(DAT$Sample)
 
@@ -96,16 +103,7 @@ if (max_diff <= al_intf_perc){
   MSG <- "Maximal %Difference is larger than allowable interference, thus dose response should be performed."
 }
 
-
-## Save report files
-#Create working directory
-dir.create(RPRT.DIR)
-
-#Set working directory
-RPRT.DIR <- paste(WD, RPRT.DIR, sep = "/")
-setwd(RPRT.DIR)
-
-# Generate report
+# Save report
 sink("Paired_Difference_Report.txt")
 paste("As per setting.csv, current allowalbe interference is:", 
       al_intf_perc, "%", SEP = " ") %>% print()

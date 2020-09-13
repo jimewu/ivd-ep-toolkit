@@ -27,6 +27,12 @@ FILE <- "data.csv" #file-name containing data
 DAT <- read.csv(FILE)
 DAT <- na.omit(DAT)
 
+#Create Report Directory
+dir.create(RPRT.DIR)
+
+#Set working directory to Report Directory
+RPRT.DIR <- paste(WD, RPRT.DIR, sep = "/")
+setwd(RPRT.DIR)
 
 #find mean of sample of no Interferent_Added
 DAT0 <- DAT %>% filter(Interferent_Added == 0)
@@ -182,15 +188,7 @@ if (sig.regs < 0.05 && direction >0){
   
 }
 
-## Save report files
-#Create working directory
-dir.create(RPRT.DIR)
-
-#Set working directory
-RPRT.DIR <- paste(WD, RPRT.DIR, sep = "/")
-setwd(RPRT.DIR)
-
-# Generate report
+# Save report
 sink("Dose_Response_Analysis_Result.txt")
 msg
 msg2

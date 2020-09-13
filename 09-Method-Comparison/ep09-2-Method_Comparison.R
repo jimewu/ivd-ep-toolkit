@@ -26,6 +26,14 @@ FILE <- "data.csv" #file-name containing data
 DAT <- read.csv(FILE)
 DAT <- na.omit(DAT)
 
+#Create Report Directory
+dir.create(RPRT.DIR)
+
+#Set working directory to Report Directory
+RPRT.DIR <- paste(WD, RPRT.DIR, sep = "/")
+setwd(RPRT.DIR)
+
+
 #Scatter plot
 PLT.SC <- ggplot(DAT,aes(x=MP.comp, y=MP.test)  ) +
   geom_point() +
@@ -102,15 +110,7 @@ fit.paba <- mcreg(x = DAT$MP.comp, y = DAT$MP.test,
                      mtest.name = "Testing Method",
                      na.rm = TRUE)
 
-## Save report files
-#Create working directory
-dir.create(RPRT.DIR)
-
-#Set working directory
-RPRT.DIR <- paste(WD, RPRT.DIR, sep = "/")
-setwd(RPRT.DIR)
-
-# Content of report
+# Save report
 ggsave("Scatter_Plot.png", 
        plot = PLT.SC,
        units = "cm",

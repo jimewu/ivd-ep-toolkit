@@ -25,6 +25,13 @@ FILE <- "data.csv" #specify file-name containing data
 DAT <- read.csv(FILE) #read file and set as DAT
 DAT <- na.omit(DAT) #remove NA values
 
+#Create Report Directory
+dir.create(RPRT.DIR)
+
+#Set working directory to Report Directory
+RPRT.DIR <- paste(WD, RPRT.DIR, sep = "/")
+setwd(RPRT.DIR)
+
 #for precision estimates
 #Draw Levey-Jennings chart
 MN <- mean(DAT$y)
@@ -104,16 +111,7 @@ if (CV.REP <= 100 * Acceptance_Criteria){
                    "% (FAIL)", sep = "")
 }
 
-
-## Save report files
-#Create working directory
-dir.create(RPRT.DIR)
-
-#Set working directory
-RPRT.DIR <- paste(WD, RPRT.DIR, sep = "/")
-setwd(RPRT.DIR)
-
-#Save plot using specs as setting
+#Save plots
 ggsave("Measurement_Results.png", 
        plot = P1,
        units = "cm",

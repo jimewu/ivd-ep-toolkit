@@ -3,7 +3,10 @@
 Packages <- c("dplyr", "ggplot2", "chemCal")
 lapply(Packages, library, character.only = TRUE)
 
-DIR <- "analysis"
+#Set working directory
+DIR <- "ivd-ep-toolkit/17-Analytical-Sensitivity"
+TIME <- format(Sys.time(), "%Y-%m%d-%H%M%S")
+RPRT.DIR <- paste("Report_for_LOD-Probit", TIME, sep = "_")
 setwd("~")
 WD <- getwd()
 WD <- paste(WD, DIR, sep = "/")
@@ -12,9 +15,10 @@ setwd(WD)
 #Read setting for analysis
 SET <- read.csv("setting.csv")
 alpha <- SET$EP17.Alpha
+probit.goal <- 1 - alpha
 
 beta <- SET$EP17.Beta
-probit.goal <- beta
+
 #Configuration for figures to be exported
 FIG_W_CM <- SET$FIG_W_CM #Figure width in cm
 FIG_H_CM <- SET$FIG_H_CM #Figure height in cm
@@ -25,10 +29,17 @@ FILE <- "data.csv" #file-name containing data
 DAT <- read.csv(FILE)
 DAT <- na.omit(DAT)
 
+#Create Report Directory
+dir.create(RPRT.DIR)
+
+#Set working directory to Report Directory
+RPRT.DIR <- paste(WD, RPRT.DIR, sep = "/")
+setwd(RPRT.DIR)
+
 #remove y=0
 DAT <- DAT %>% filter(y > 0 )
 
-lob.log.lst <- c()
+lod.log.lst <- c()
 DAT.SPL <- DAT %>% split(DAT$Reagent_Lot)
 
 
@@ -47,7 +58,7 @@ for (X in DAT.SPL){
   
   #reverse calculate log[conc]
   rslt <- inverse.predict(fit, probit.goal)
-  lod.log.lst <- c(lob.log.lst, rslt$Prediction)
+  lod.log.lst <- c(lod.log.lst, rslt$Prediction)
   
   P1 <- ggplot(X, aes(x = log.conc, y = y)  ) +
     geom_point() +
@@ -62,12 +73,12 @@ for (X in DAT.SPL){
          dpi = FIG_DPI) #save as .png file
 }
 
-lob.lst <- 10 ^ lob.log.lst
-lob.final <- max(lob.lst)
+lod.lst <- 10 ^ lod.log.lst
+lod.final <- max(lod.lst)
 
-sink("Probit_regression_for_LoB.txt")
-print("LoB for each Reagent Lot is:")
+sink("Probit_regression_for_LOD.txt")
+print("LoD for each Reagent Lot is:")
 print(lod.lst)
-print("The final LoB is:")
+print("The final LoD is:")
 print(lod.final)
 sink()

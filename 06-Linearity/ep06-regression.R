@@ -1,5 +1,7 @@
 #Part 0. Preparations: configuration area
-#Set working directory if WD has not been set
+#Load package needed
+Packages <- c("dplyr", "ggplot2")
+lapply(Packages, library, character.only = TRUE)
 
 #Set working directory
 DIR <- "ivd-ep-toolkit/06-Linearity"
@@ -14,7 +16,7 @@ setwd(WD)
 SET <- read.csv("setting.csv")
 #Acceptance_Criteria for differences in linear regression
 Acceptance_Criteria = SET$EP6.Acceptance_Criteria
-N.RND <- SET$Max.N.Small
+N.RND <- SET$Max.Digit
 
 #Configuration for figures to be exported
 FIG_W_CM <- SET$FIG_W_CM #Figure width in cm
@@ -25,11 +27,14 @@ FIG_DPI <- SET$FIG_DPI #Figure resolution
 FILE <- "data.csv" #file-name containing data
 DAT <- read.csv(FILE)
 
-#Part 1. Polynomial regression
-#Load package needed
-Packages <- c("dplyr", "ggplot2")
-lapply(Packages, library, character.only = TRUE)
+#Create Report Directory
+dir.create(RPRT.DIR)
 
+#Set working directory to Report Directory
+RPRT.DIR <- paste(WD, RPRT.DIR, sep = "/")
+setwd(RPRT.DIR)
+
+#Part 1. Polynomial regression
 RGS1 <- lm(y ~ poly(dilution, 1, raw = TRUE), DAT) #1st order regression
 RGS2 <- lm(y ~ poly(dilution, 2, raw = TRUE), DAT) #2nd order regression
 RGS3 <- lm(y ~ poly(dilution, 3, raw = TRUE), DAT) #3rd order regression
@@ -63,8 +68,6 @@ for (X in DAT.SPL){
             Regression.Diff, Regression.Perc.Diff,
             Regression_Diff_H_Goal, Regression_Diff_L_Goal)
   Table_1st_vs_2nd <- rbind(Table_1st_vs_2nd, RSLT)
-  
-  
 }
 
 
@@ -75,8 +78,6 @@ colnames(Table_1st_vs_2nd) <- c("Dilution", "Mean",
                                 "Regression_Diff", "Regression_Perc_Diff",
                                 "Regression_Diff_H_Goal", 
                                 "Regression_Diff_L_Goal")
-
-
 
 POOL.RP <- Table_1st_vs_2nd %>% summarize(Pooled_Repeatability = sqrt(mean(SQ_Perc_D)))
 colnames(POOL.RP) <- c("Pooled_Repeatability(%)")
@@ -110,8 +111,6 @@ for (X in DAT.SPL){
             Regression.Diff, Regression.Perc.Diff,
             Regression_Diff_H_Goal, Regression_Diff_L_Goal)
   Table_1st_vs_3rd <- rbind(Table_1st_vs_3rd, RSLT)
-  
-  
 }
 
 colnames(Table_1st_vs_3rd) <- c("Dilution", "Mean", 
@@ -159,13 +158,6 @@ D1_vs_3 <- ggplot(Table_1st_vs_3rd, aes(x = Mean) ) +
   labs(title = "Difference Plot: 1st VS 3rd", y = "Difference of Regression", fill = "", color = "Acceptance Criteria")
 
 ## Save report files
-#Create working directory
-dir.create(RPRT.DIR)
-
-#Set working directory
-RPRT.DIR <- paste(WD, RPRT.DIR, sep = "/")
-setwd(RPRT.DIR)
-
 sink("(1st)Results_of_Regression_Analysis.txt") #save to .txt file
 summary(RGS1)
 sink()

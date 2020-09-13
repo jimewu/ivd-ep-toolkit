@@ -19,9 +19,12 @@ alpha <- SET$EP7.Alpha
 beta <- SET$EP7.Beta
 rtio <- SET$EP7.MP_rep / SET$EP7.Allowable_interference
 
+#Create Report Directory
+dir.create(RPRT.DIR)
 
-
-
+#Set working directory to Report Directory
+RPRT.DIR <- paste(WD, RPRT.DIR, sep = "/")
+setwd(RPRT.DIR)
 
 #2-sided
 N.2s <- 2 * ((qnorm(1-alpha/2) + qnorm(1-beta)) * rtio )^2
@@ -39,16 +42,7 @@ if (N.1s >= 5){
   N.1s <- 5
 }
 
-
-## Save report files
-#Create working directory
-dir.create(RPRT.DIR)
-
-#Set working directory
-RPRT.DIR <- paste(WD, RPRT.DIR, sep = "/")
-setwd(RPRT.DIR)
-
-# Generate report
+# Save report
 sink("Determine_Replicate_Number.txt")
 paste("for two-sided test: N =", N.2s, sep = " ")
 paste("for one-sided test: N =", N.1s, sep = " ")

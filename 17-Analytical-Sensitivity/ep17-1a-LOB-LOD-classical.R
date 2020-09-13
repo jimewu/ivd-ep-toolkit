@@ -3,7 +3,10 @@
 Packages <- c("dplyr", "ggplot2", "knitr")
 lapply(Packages, library, character.only = TRUE)
 
-DIR <- "analysis"
+#Set working directory
+DIR <- "ivd-ep-toolkit/17-Analytical-Sensitivity"
+TIME <- format(Sys.time(), "%Y-%m%d-%H%M%S")
+RPRT.DIR <- paste("Report_for_LOB-LOD-Classical-Method", TIME, sep = "_")
 setwd("~")
 WD <- getwd()
 WD <- paste(WD, DIR, sep = "/")
@@ -23,6 +26,15 @@ FIG_DPI <- SET$FIG_DPI #Figure resolution
 FILE <- "data.csv" #file-name containing data
 DAT <- read.csv(FILE)
 DAT <- na.omit(DAT)
+
+#Create Report Directory
+dir.create(RPRT.DIR)
+
+#Set working directory to Report Directory
+RPRT.DIR <- paste(WD, RPRT.DIR, sep = "/")
+setwd(RPRT.DIR)
+
+
 
 #Part 1. LoB部份
 DAT_BLANK <- DAT %>% filter(Sample_Type == "Blank") #分離出Blank資料

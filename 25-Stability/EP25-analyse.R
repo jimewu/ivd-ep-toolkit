@@ -3,7 +3,10 @@
 Packages <- c("dplyr", "ggplot2", "knitr")
 lapply(Packages, library, character.only = TRUE)
 
-DIR <- "analysis"
+#Set working directory
+DIR <- "ivd-ep-toolkit/25-Stability"
+TIME <- format(Sys.time(), "%Y-%m%d-%H%M%S")
+RPRT.DIR <- paste("Report_for_Stability", TIME, sep = "_")
 setwd("~")
 WD <- getwd()
 WD <- paste(WD, DIR, sep = "/")
@@ -22,6 +25,13 @@ FIG_DPI <- SET$FIG_DPI #Figure resolution
 FILE <- "data.csv" #file-name containing data
 DAT <- read.csv(FILE)
 DAT <- na.omit(DAT)
+
+#Create Report directory
+dir.create(RPRT.DIR)
+
+#Set working directory to Report directory
+RPRT.DIR <- paste(WD, RPRT.DIR, sep = "/")
+setwd(RPRT.DIR)
 
 #Part 1. Polynomial regression of each sample
 DAT_LST <- DAT %>% split(DAT$Sample) #Split DAT into list by Sample

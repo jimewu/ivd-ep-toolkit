@@ -8,7 +8,7 @@
 ## Configure parameters
 1. Edit the "setting.csv" file.  The meaning of each column is as the following:
 	- EP6.Acceptance_Criteria: the acceptance criteria (i.e., the maximal allowable difference (%) of the linear and best non-linear regression). The default value is set to 5% (i.e., 0.05), which should be modified as your own need.
-	- Max.N.Small: The maximal digits after the decimal point of the number in the report table files.
+	- Max.Digit: The maximal digits after the decimal point of the number in the report table files.
 	- FIG\_W\_CM: The width (in CM) of the figure to be generated as part of the report
 	- FIG\_H\_CM: The height (in CM) of the figure to be generated as part of the report
 	- FIG\_DPI: The resolution (in DPI) of the figure to be generated as part of the report
