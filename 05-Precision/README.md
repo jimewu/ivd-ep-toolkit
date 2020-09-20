@@ -1,37 +1,39 @@
-[中文版](README中文.md)
+# 使用說明
 
-# Instruction for Use
-## Copy example files
-1. Example files "setting.csv" and "data.csv" can be found at the "example" directory, copy them to here ("05-Precision" directory).
-2. The program/script would only read those two files under the "05-Precision", and the examples files are for references only.
+## 準備檔案
 
-## Configure parameters
-1. Edit the "setting.csv" file. The meaning of each column is as the following:
-	- EP5.Acceptance_Criteria: The acceptance criteria (%CV)，the default value is set to 5%(i.e., 0.05)，which should be modified as your own need.
-	- FIG\_W\_CM: The width (in CM) of the figure to be generated as part of the report
-	- FIG\_H\_CM: The height (in CM) of the figure to be generated as part of the report
-	- FIG\_DPI: The resolution (in DPI) of the figure to be generated as part of the report
-2. Edit the values of each colum according to your need and save.
+- 在example資料夾找到所需要的setting.csv以及data.csv範例檔案，複製到程式資料夾"05-Precision"底下。
+- 目前example資料夾中的檔案已經填入數值，可以用於執行相應程式並產生報告，但使用者應參考附錄"欄位說明"替換成自己的設定/數值。
 
-## Enter data
-1. Edit the "data.csv" file. The meaning of each column is as the following:
-	- Each row should contain only one result/data, and each column is a parameter of a data. So if there are 80 results, the data.csv file should have 80 rows of numbers (not including the first header row)
-	- Var1: The 1st parameter of your experimental design. For instance, in the 20 Days * 2 Runs * 2 Replicates, Var1 means Day.
-	- Var2: The 2nd parameter of your experimental design. For instance, in the 20 Days * 2 Runs * 2 Replicates, Var2 means Run.
-	- Rep: The 3rd parameter of your experimental design (i.e., replicate).
-		- y: The measurement value.
-2. Current values in the "data.csv" file is for references only and should be replaced by your own data.
+## 執行程式 & 觀看報告
 
-## Run program/script
-1. Run the "ep05-analysis.R"
+- 執行ep05-analysis.R
+- 報告會出現在程式資料夾底下的"Report\_YYYY-MMDD-HHMMSS"資料夾下
+- 報告內容依序如下:
+	+ Measurement_Results.png: 原始結果作圖(X: Var1; Y: 測量值)，不同的Var2會以不同顏色顯示，不同的Replicate會以不同形狀顯示
+	+ Levey-Jennings.png: 同Measurement_Results.png，但Y改為標準差
+	+ Report.txt: 結果彙整，包含:
+		* Summary: 各項參數有無通過setting.csv中設定之Acceptance Critera (EP5.Acceptance_Criteria)
+		* Result of ANOVA: nested ANOVA結果
+		* Confidence Interval in SD: 以SD表示的信心區間
+		* Confidence Interval in %CV: 以%CV表示的新新區間
 
-## Report
-1. After the result has been calculated by the program, a report folder containing results can be found with the name similar to "Report-YYYY-MM-DD-hh-mm-ss".
-2. Files can be found in the report folder and their meaning:
-	- Measurement_Results.png: Scatter plot of the original data. The X-axis is Var1, and the Y-axis is the measurement value (y). Each dot is further grouped into different colors and shapes according to its respective Var2 and Replicate.
-	- Levey-Jennings.png: Almost the same as Measurement_Results.png, with only one difference that the Y-axis is the standard deviation (SD) which is convenient to find outliers.
-	- Report.txt:
-		- Summary: the brief description that whether a parameter (Total, Var1, Var2, and Replicate) is within the acceptance criteria (the percentage number set in the setting.csv)
-		- Result of ANOVA: the result of nested-ANOVA
-		- Confidence interval in SD: the confidence interval of total and replicate (error) parameter in SD
-		- Confidence interval in %CV: the confidence interval of total and replicate (error) parameter in %CV
+# 附錄: 欄位說明
+
+## setting.csv
+
+說明: 各欄位應該依照使用者實際需求修改
+
+- FIG\_W\_CM: 報告的圖表寬度(單位為公分)
+- FIG\_H\_CM: 報告的圖表高度(單位為公分)
+- FIG\_DPI: 報告的圖表解析度(單位DPI)
+- EP5.Acceptance_Criteria: 允收基準，預設為0.05 (i.e., 5%)
+
+## data.csv
+
+基本說明: 第一列是標題列，請勿更改。第二列起每一列是一筆資料，因此若有80筆結果就應該有80列。各欄位說明如下:
+
+- Var1: 試驗設計中的1st參數，例如在20 Days * 2 Runs * 2 Replicates中，Var1就代表Day
+- Var2:試驗設計中的2nd參數，例如在20 Days * 2 Runs * 2 Replicates中，Var2就代表Run
+- Rep: 試驗設計中的3rd參數，也就是第幾個重複(replicate)
+- y: 該次的測量值

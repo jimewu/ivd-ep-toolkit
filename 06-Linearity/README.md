@@ -1,75 +1,81 @@
-[中文版](README中文.md)
+# 使用說明
 
-# Instruction for Use
-## Copy example files
-1. Example files "setting.csv" and "data.csv" can be found at the "example" directory, copy them to here ("06-Linearity" directory).
-2. The program/script would only read those two files under the "06-Linearity", and the examples files are for references only.
+## 準備檔案
 
-## Configure parameters
-1. Edit the "setting.csv" file.  The meaning of each column is as the following:
-	- EP6.Acceptance_Criteria: the acceptance criteria (i.e., the maximal allowable difference (%) of the linear and best non-linear regression). The default value is set to 5% (i.e., 0.05), which should be modified as your own need.
-	- Max.Digit: The maximal digits after the decimal point of the number in the report table files.
-	- FIG\_W\_CM: The width (in CM) of the figure to be generated as part of the report
-	- FIG\_H\_CM: The height (in CM) of the figure to be generated as part of the report
-	- FIG\_DPI: The resolution (in DPI) of the figure to be generated as part of the report
-2. Edit the values of each colum according to your need and save.
+- 在example資料夾找到所需要的setting.csv以及data.csv範例檔案，複製到程式資料夾"06-Linearity"底下。
+- 目前example資料夾中的檔案已經填入數值，可以用於執行相應程式並產生報告，但使用者應參考附錄"欄位說明"替換成自己的設定/數值。
 
-## Enter data
-1. Edit the "data.csv" file. The meaning of each column is as the following:
-	- Each row should contain only one result/data, and each column is a parameter of a data. So if there are 80 results, the data.csv file should have 80 rows of numbers (not including the first header row)
-	- dilution: the relative concentration of each sample simply used as its label here.
-		- e.g., say there are 3 samples with concentrations: 1x, 2x, and 3x, so their label here should be 1, 2, and 3
-	- replicate: the replicate number of this result
-	- y: The measurement value.
-2. Current values in the "data.csv" file is for references only and should be replaced by your own data.
+## 執行程式 & 觀看報告
 
-## Run program/script
-1. Run the "ep6-regression.R"
+- 執行ep06-regression.R
+- 報告會出現在程式資料夾底下的"Report\_YYYY-MMDD-HHMMSS"資料夾下
+- 報告內容依序如下:
+	- (QC)Sample\_Pooled\_Repeatability.txt: 不同repeat之間的repeatability計算結果，須自行決定是否符合設定的標準，若符合則可繼續分析
+	- 單一多項式分析: 一共有3個檔案，分別是"(1st)Results_of_Regression_Analysis.txt", "(2nd)Results_of_Regression_Analysis.txt", "(3rd)Results_of_Regression_Analysis.txt"，分別代表將結果做一次多項式(1st), 二次多項式(2nd), 三次多項式(3rd)回歸的結果。每個檔案中的Coefficients裡面含有回歸的結果表格，各列說明如下:
+		- (Intercept): 截距的結果，Estimate為估計值，Std. Error為標準差，Pr(>|t|) 為其顯著性(一般< 0.05表示顯著，即標注為*)
+		- poly(dilution, 1, raw = TRUE): 一次多項式的斜率，各欄位說明與截距類似。
+		- 其餘在二級/三級多項式回歸中以此類推，各欄位說明均類似。
+		- 這個部份的重點在於確認一級多項式結果為顯著，並找出顯著的非線性多項式(2nd 或 3rd)
+	- 多項式對比: 例如是1級多項式與2級多項式對比，則有以下檔案:
+		+ (1st_vs_2nd)Linearity_Study.png: 將兩個多項式結果一起成現在同一圖中(X: 相對濃度; Y: 測量值)，並用不同顏色以及線條(實線/虛線)顯示。
+		+ (1st_vs_2nd)Difference_Plot.png: 兩個多項式的差異以點呈現在圖中 (X: 測量值平均; Y: 多項式差異)，並以虛線畫出依據setting.csv中設定的允收基準(EP6.Acceptance\_Criteria)，也就是最大的non-linearity上下線。
+		+ (1st_vs_2nd)Table.csv: 多項式對比原始結果
 
-## Report
-1. After the result has been calculated by the program, a report folder containing results can be found with the name similar to "Report-YYYY-MM-DD-hh-mm-ss".
-2. Files can be found in the report folder and their meaning are described below.
+# 附錄: 欄位說明
 
-### (QC)Sample\_Pooled\_Repeatability.txt
-- The result of repeatability (%). Users should determine if it is acceptable by yourself.
+## setting.csv
 
-### Result\_of\_Regression_Analysis 
-- There are 3 files, including "(1st)Results_of_Regression_Analysis.txt", "(2nd)Results_of_Regression_Analysis.txt", and "(3rd)Results_of_Regression_Analysis.txt"
-- The above 3 files are the result of 1st, 2nd, and 3rd polynomial regression.
-- In each file, the 'Coefficients' section contains the result of regression. The meaning of each row and column are as below:
-	- (Intercept): The intercept. 'Estimate' is the estimate value, 'Std. Error' is the standard deviation, 'Pr(>|t|)' is its degree of significance (typically considered significant if < 0.05 and labeled as *)
-	- poly(dilution, 1, raw = TRUE): the slope of 1st regression. 
-	- similar meaning applys to the result of 2nd and 3rd regression.
-	- In this part, the key things are to make sure the linear regression is significant, and to find out the most significant non-linear regression (2nd or 3rd).
+說明: 各欄位應該依照使用者實際需求修改
+
+- FIG\_W\_CM: 報告的圖表寬度(單位為公分)
+- FIG\_H\_CM: 報告的圖表高度(單位為公分)
+- FIG\_DPI: 報告的圖表解析度(單位DPI)
+- Max.Digit: 報告中數值的小數位數，預設為3
+- EP6.Acceptance_Criteria: 允收基準，預設為0.05 (i.e., 5% non-linearity)
+
+## data.csv
+
+基本說明: 第一列是標題列，請勿更改。第二列起每一列是一筆資料，因此若有80筆結果就應該有80列。各欄位說明如下:
+
+- dilution: 樣品的相對濃度值，例如6個樣品分別濃度為1x, 2x, 3x, 4x, 5x, 6x，則分別填入1, 2, 3, 4, 5, 6
+- replicate: 該次測量是第幾次重複
+- y: 該次測量值
+
+
+
+
+
+
+
+
 	
 ### Linearity_Study.png
-- There are 2 files, including "(1st\_vs\_2nd)Linearity_Study.png" and "(1st\_vs\_3rd)Linearity_Study.png"
-- Following the most significant non-linear regression found in "Result\_of\_Regression_Analysis ", say 2nd for instance, you only need to examine  "(1st\_vs\_2nd)Linearity_Study.png".
-- Similarly, if the most significant non-linear regression is 3rd regression, you only need to examine "(1st\_vs\_3rd)Linearity_Study.png".
-- In this figure, the X-axis is the relative concentration, and the Y-axis is the measurement value. Besides the measurement values presented in this scatter plot, regression lines are presented in different colors and line-types (solid and dotted).
-- In this figure, we can find out which regression line fits better the measurement values.
+- 一共有2個檔案，分別是"(1st\_vs\_2nd)Linearity_Study.png"與"(1st\_vs\_3rd)Linearity_Study.png"
+- 依據在"Result\_of\_Regression_Analysis "中找出的最佳非線性，例如2nd，於是僅須觀看"(1st\_vs\_2nd)Linearity_Study.png"
+- 同理，如果最佳非線性是3rd，則僅須觀看"(1st\_vs\_3rd)Linearity_Study.png"
+- 圖中橫軸為相對濃度，縱軸為測量值，圖中除了測量值的點以外還有回歸線以不同顏色以及實線/虛線標示
+- 從圖中可以比較出哪個多項式比較貼近測量值結果
 
 ### Difference_Plot.png
-- There are 2 files, including "(1st\_vs\_2nd)Difference_Plot.png" and "(1st\_vs\_3rd)Difference_Plot.png"
-- Following the most significant non-linear regression found in "Result\_of\_Regression_Analysis ", say 2nd for instance, you only need to examine  "(1st\_vs\_2nd)Difference_Plot.png".
-- Similarly, if the most significant non-linear regression is 3rd regression, you only need to examine "(1st\_vs\_3rd)Difference_Plot.png".
-- In this figure, the X-axis is the average of the measurement value, and the Y-axis is the difference value of 2 regression equation (at that measurement value). Two dotted lines are the upper and lower limits of non-linearity (the allowable difference  value of linear and best non-linear, set as % in the setting.csv file)
-- as the allowable difference  values are calculated as the (measurement value)*(allowable % of difference), those values would increase when the measurement value increases.
-- Alternatively, if the Y-axis is changed into %Difference, the upper and lower limit lines would then be horizontal.
+- 一共有2個檔案，分別是"(1st\_vs\_2nd)Difference_Plot.png"與"(1st\_vs\_3rd)Difference_Plot.png"
+- 依據在"Result\_of\_Regression_Analysis "中找出的最佳非線性，例如2nd，於是僅須觀看"(1st\_vs\_2nd)Difference_Plot.png"
+- 同理，如果最佳非線性是3rd，則僅須觀看"(1st\_vs\_3rd)Difference_Plot.png"
+- 圖中橫軸為各測量值的平均值，縱軸為兩個多項式在該濃度的估計值的差值，圖中除了差值的點以外還有兩個虛線分別是允收的最大非線性%在該濃度的上下限 (在setting.csv中設置)
+- 由於最大非線性%是根據橫軸的濃度值計算，因此濃度值越大其上下限值會越大(如果把縱軸改為%Difference則是恆定)
 
 ### Table
-- There are 2 files, including "(1st\_vs\_2nd)Table.csv" and "(1st\_vs\_3rd)Table.csv"
-- Following the most significant non-linear regression found in "Result\_of\_Regression_Analysis ", say 2nd for instance, you only need to examine  "(1st\_vs\_2nd)Table.csv"
-- Similarly, if the most significant non-linear regression is 3rd regression, you only need to examine "(1st\_vs\_3rd)Table.csv"
-- In this table, the meaning of each column is described as below:
-	- Dilution: The relative concentration of each sample simply used as its label here.
-	- y.Mean: The average of measurement values of that dilution
-	- y.Diff: The difference of measurement values of that dilution
-	- y.Squared_Diff: The square of y.Diff
-	- y.%Diff: The difference of measurement values of that dilution, presented in the percentage of y.Mean.
-	- y.Squared_%Diff: The square of y.%Diff
-	- Regression.1st: The estimate value of that y.Mean calculated using 1st regression equation.
-	- Regression.2nd: The estimate value of that y.Mean calculated using 2nd regression equation.
-	- Regression.3rd: The estimate value of that y.Mean calculated using 3rd regression equation.
-	- Regression.Diff: The difference of estimate values of that y.Mean calculated using linear and best non-linear regression equation.
-	- Regression.%Diff: The difference of estimate values of that y.Mean calculated using linear and best non-linear regression equation, presented in the percentage of y.Mean.
+- 一共有2個檔案，分別是"(1st\_vs\_2nd)Table.csv"和"(1st\_vs\_3rd)Table.csv"
+- 依據在"Result\_of\_Regression_Analysis "中找出的最佳非線性，例如2nd，於是僅須觀看"(1st\_vs\_2nd)Table.csv"
+- 同理，如果最佳非線性是3rd，則僅須觀看"(1st\_vs\_3rd)Table.csv"
+- 表格中各欄位說明如下:
+	- Dilution: 相對濃度
+	- y.Mean: 該濃度測量結果的平均
+	- y.Diff: 該濃度測量結果間的差值
+	- y.Squared_Diff: y.Diff平方
+	- y.%Diff: 該濃度測量結果間的差值，以y.Mean的百分比呈現
+	- y.Squared_%Diff: y.%Diff平方
+	- Regression.1st: 該y.Mean以一次多項式回推的相對濃度值
+	- Regression.2nd: 該y.Mean以二次多項式回推的相對濃度值
+	- Regression.3rd: 該y.Mean以三次多項式回推的相對濃度值
+	- Regression.Diff: 線性與非線性回推相對濃度值的差值
+	- Regression.%Diff: 線性與非線性回推相對濃度值的差值，以y.Mean的百分比呈現

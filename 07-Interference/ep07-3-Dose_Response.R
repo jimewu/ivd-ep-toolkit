@@ -7,7 +7,7 @@ lapply(Packages, library, character.only = TRUE)
 #Set working directory
 DIR <- "ivd-ep-toolkit/07-Interference"
 TIME <- format(Sys.time(), "%Y-%m%d-%H%M%S")
-RPRT.DIR <- paste("Report_for_Paired_Difference", TIME, sep = "_")
+RPRT.DIR <- paste("Report_for_Dose_Response", TIME, sep = "_")
 setwd("~")
 WD <- getwd()
 WD <- paste(WD, DIR, sep = "/")
