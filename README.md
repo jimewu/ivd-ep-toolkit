@@ -42,11 +42,33 @@
 
 ## 安裝程式所需套件
 
-- 回到"ivd-ep-toolkit"，用滑鼠左鍵點擊install_deps.R兩次以執行，過程中會出現如下畫面:
+- 打開資料夾，進入C槽下面的Program Files/R/R-4.0.2/bin/x64，裡面會有一個Rgui.exe如下圖:
 
 ![fig8](.resource/fig8.png)
 
-- 完成後，即可開始使用各資料夾下的程式
+(如果使用32位元Windows，則上述路徑改為C槽下面的Program Files/R/R-4.0.2/bin/i386，大多數人應該都不是此狀況)
+
+- 打開Rgui.exe之後，點擊左上方第一個開啟檔案圖示，如下圖:
+
+![fig9](.resource/fig9.png)
+
+- 會出現"開啟命令稿"視窗，選擇"文件/ivd-ep-toolkit"底下的"install_deps.R"命令稿，如下圖:
+
+![fig10](.resource/fig10.png)
+
+- 打開"install_deps.R"命令稿之後，會多出現一個新的視窗顯示其內容，將其內容文字全部選取，然後再點擊左上方第3個圖示，如下圖:
+
+![fig11](.resource/fig11.png)
+
+- 過程中會詢問要從哪一個來源(鏡像)下載套件，直接點確定即可開始安裝，如下圖:
+
+![fig12](.resource/fig12.png)
+
+安裝套件耗時會依照電腦以及網路速度不同而定，可能需要10分鐘或更多，結束之後，關閉Rgui.exe即完成套件安裝，如下圖:
+
+![fig13](.resource/fig13.png)
+
+![fig14](.resource/fig14.png)
 
 # 2. 使用程式
 
