@@ -33,7 +33,9 @@
 
 基本說明: 第一列是標題列，請勿更改。第二列起每一列是一筆資料，因此若有80筆結果就應該有80列。各欄位說明如下:
 
-- Var1: 試驗設計中的1st參數，例如在20 Days * 2 Runs * 2 Replicates中，Var1就代表Day
-- Var2:試驗設計中的2nd參數，例如在20 Days * 2 Runs * 2 Replicates中，Var2就代表Run
-- Rep: 試驗設計中的3rd參數，也就是第幾個重複(replicate)
+- Var1: 試驗設計中的1st參數，例如在3 Lots * 20 Days * 2 Runs中，Var1就代表Lot
+- Var2:試驗設計中的2nd參數，例如在3 Lots * 20 Days * 2 Runs中，Var2就代表Day
+- Var3: 試驗設計中的3rd參數，例如在3 Lots * 20 Days * 2 Runs中，Var3就代表Run
+	+ **如果只有實驗中只有兩個變數，則填入Var1以及Var2，同時Var3保持都是1即可**
+	+ **Var1, Var2, Var3均相同的多筆資料即為不同replicates，因此不需要額外輸入"Replicate"這個變數**
 - y: 該次的測量值
