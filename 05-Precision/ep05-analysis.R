@@ -38,29 +38,57 @@ MN <- mean(DAT$y)
 SD <- sd(DAT$y)
 DAT$y.sd <- (DAT$y - MN) / SD #Calculate y in scale of SD
 
-#Scatterplot in original scale
-P1 <- DAT %>% ggplot(aes(x = Var1) ) +
-  geom_point(aes(y = y, 
-                 color = factor(Var2), 
-                 shape = factor(Rep) )) + 
-  labs(title = "Measurement results", 
-       shape = "Replicate", 
-       color = "Var2") +
-  theme(plot.title = element_text(hjust = 0.5)) #Center title
+Var3.YN <- factor(DAT$Var3) %>% levels() %>% length()
 
-#Levey Jennings plot
-LJ <- DAT %>% ggplot(aes(x = Var1) ) +
-  geom_point(aes(y = y.sd, 
-                 color = factor(Var2), 
-                 shape = factor(Rep) ) ) + 
-  labs(title = "Levey-Jennings", 
-       shape = "Replicate", 
-       color = "Var2", 
-       y = "SD") +
-  theme(plot.title = element_text(hjust = 0.5)) #Center title
 
-#Calculate result of nested ANOVA of day/run
-RSLT <- anovaVCA(y~Var1/Var2,DAT)
+if (Var3.YN == 1){
+  #Scatterplot in original scale
+  P1 <- DAT %>% ggplot(aes(x = Var1) ) +
+    geom_point(aes(y = y, 
+                   color = factor(Var2) )) + 
+    labs(title = "Measurement results", 
+         color = "Var2") +
+    theme(plot.title = element_text(hjust = 0.5)) #Center title
+  
+  #Levey Jennings plot
+  LJ <- DAT %>% ggplot(aes(x = Var1) ) +
+    geom_point(aes(y = y.sd, 
+                   color = factor(Var2) ) ) + 
+    labs(title = "Levey-Jennings", 
+         color = "Var2",
+         y = "SD") +
+    theme(plot.title = element_text(hjust = 0.5)) #Center title
+  
+}else{
+  #Scatterplot in original scale
+  P1 <- DAT %>% ggplot(aes(x = Var1) ) +
+    geom_point(aes(y = y, 
+                   color = factor(Var2), 
+                   shape = factor(Var3) )) + 
+    labs(title = "Measurement results", 
+         color = "Var2", 
+         shape = "Var3") +
+    theme(plot.title = element_text(hjust = 0.5)) #Center title
+  
+  #Levey Jennings plot
+  LJ <- DAT %>% ggplot(aes(x = Var1) ) +
+    geom_point(aes(y = y.sd, 
+                   color = factor(Var2), 
+                   shape = factor(Var3) ) ) + 
+    labs(title = "Levey-Jennings", 
+         color = "Var2", 
+         shape = "Var3", 
+         y = "SD") +
+    theme(plot.title = element_text(hjust = 0.5)) #Center title
+}
+
+if (Var3.YN == 1){
+  #Calculate result of nested ANOVA of day/run
+  RSLT <- anovaVCA(y~Var1/Var2,DAT)
+}else{
+  RSLT <- anovaVCA(y~Var1/Var2/Var3,DAT)
+}
+
 
 #calculate confidence interval
 INTF <- VCAinference(RSLT)
@@ -100,16 +128,44 @@ if (CV.V2 <= 100 * Acceptance_Criteria){
                    "% (FAIL)", sep = "")
 }
 
-CV.REP <- RSLT[4,7]
-if (CV.REP <= 100 * Acceptance_Criteria){
-  RPRT.REP <- paste("%CV of Replicate <= acceptance critera:", 
-                   100 * Acceptance_Criteria,
-                   "% (PASS)", sep = "")
+if (Var3.YN == 1){
+  CV.REP <- RSLT[4,7]
+  if (CV.REP <= 100 * Acceptance_Criteria){
+    RPRT.REP <- paste("%CV of Replicate <= acceptance critera:", 
+                      100 * Acceptance_Criteria,
+                      "% (PASS)", sep = "")
+  }else{
+    RPRT.REP <- paste("%CV of Replicate > acceptance critera:", 
+                      100 * Acceptance_Criteria,
+                      "% (FAIL)", sep = "")
+  }
 }else{
-  RPRT.REP <- paste("%CV of Replicate > acceptance critera:", 
-                   100 * Acceptance_Criteria,
-                   "% (FAIL)", sep = "")
+  CV.V3 <- RSLT[4,7]
+  
+  if (CV.V3 <= 100 * Acceptance_Criteria){
+    RPRT.V3 <- paste("%CV of Var3 <= acceptance critera:", 
+                      100 * Acceptance_Criteria,
+                      "% (PASS)", sep = "")
+  }else{
+    RPRT.V3 <- paste("%CV of Var3 > acceptance critera:", 
+                      100 * Acceptance_Criteria,
+                      "% (FAIL)", sep = "")
+  }
+  
+  CV.REP <- RSLT[5,7]
+  
+  if (CV.REP <= 100 * Acceptance_Criteria){
+    RPRT.REP <- paste("%CV of Replicate <= acceptance critera:", 
+                      100 * Acceptance_Criteria,
+                      "% (PASS)", sep = "")
+  }else{
+    RPRT.REP <- paste("%CV of Replicate > acceptance critera:", 
+                      100 * Acceptance_Criteria,
+                      "% (FAIL)", sep = "")
+  }
 }
+
+
 
 #Save plots
 ggsave("Measurement_Results.png", 
@@ -128,10 +184,13 @@ ggsave("Levey-Jennings.png",
 
 sink("Report.txt")
 print("=============================Summary=============================")
-RPRT.total
-RPRT.V1
-RPRT.V2
-RPRT.REP
+RPRT.total %>% print()
+RPRT.V1 %>% print()
+RPRT.V2 %>% print()
+if (Var3.YN != 1){
+  RPRT.V3 %>% print()
+}
+RPRT.REP %>% print()
 print("==========================Result of ANOVA==========================")
 RSLT
 print("=====================Confidence Interval in SD=====================")
