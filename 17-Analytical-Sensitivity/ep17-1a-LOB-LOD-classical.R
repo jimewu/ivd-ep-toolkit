@@ -67,7 +67,7 @@ if (SPW$p.value < 0.05){
     RPRT0_LOT <- c(RPRT0_LOT, LOT)
     RPRT0_LOB <- c(RPRT0_LOB, LOB_1L)
   }
-  MSG = "Blank資料為非常態分佈(Shapiro-Wilk test p-value <0.05)"
+  MSG = "The Blank data is not normally distributed (Shapiro-Wilk test p-value <0.05)"
   RPRT0 <- data.frame(Lot = RPRT0_LOT,
                       LoB = RPRT0_LOB)
   
@@ -103,7 +103,7 @@ if (SPW$p.value < 0.05){
     RPRT0_CP <- c(RPRT0_CP, CP)
     RPRT0_LOB <- c(RPRT0_LOB, LOB_1L)
   }
-  MSG = "Blank資料為常態分佈(Shapiro-Wilk test p-value >=0.05)"
+  MSG = "The Blank data is normally distributed (Shapiro-Wilk test p-value >=0.05)"
   RPRT0 <- data.frame(Lot = RPRT0_LOT,
                       Mean = RPRT0_MEAN,
                       SD = RPRT0_SD,
@@ -205,20 +205,22 @@ RPRT_LOD2.k <- RPRT_LOD2 %>% kable()
 #輸出報告
 sink("Classical_LOB_LOD_Report.txt")
 Sys.Date()
-print("Part 1. LoB部份")
+print("Part 1. LoB Report")
 print(MSG)
-print("單一批次的LoB結果分別是：")
+print("LoB for each lot:")
 print(RPRT1)
-paste("最終的LoB是：", LOB_F)
+paste("Final LoB:", LOB_F)
 print("=========================================")
-print("Part 2. LoD部份")
-print("個別樣品結果：")
+print("Part 2. LoD Report")
+print("Result for each sample in each lot:")
 print(RPRT_LOD.k)
-print("各Reagent_Lot結果：")
+print("")
+print("Result for each lot:")
 print(RPRT_LOD2.k)
-print("單一批次的LoD分別是：")
+print("")
+print("LoD for each lot:")
 print(LOD)
-paste("最終的LoD是：", LOD_F)
+paste("Final LoD:", LOD_F)
 sink()
 write.csv(RPRT0, file = "Classical_LOB_Sample_Report.csv")
 write.csv(RPRT_LOD, file = "Classical_LOD_Sample_Report.csv")

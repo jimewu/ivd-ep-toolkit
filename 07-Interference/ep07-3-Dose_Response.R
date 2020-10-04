@@ -99,9 +99,10 @@ if (sig.regs < 0.05 && direction >0){
   x.goal <- inverse.predict(fit.lm, newdata = y.goal)
   x.goal <- x.goal$Prediction
   
-  msg <- "線性回歸顯著(p<0.05)，干擾方向為正向"
-  msg2 <- paste("以線性回歸推測干擾物濃度為:", x.goal, "以內不超過Allowable Interference:",AI, sep = " ")
-  
+  msg <- "The result of linear regression is significant (p<0.05)，and the interference is positive."
+  msg2 <- paste("Using the result of linear regression, when the interferent concentration is no higher than", x.goal, 
+                ", the acceptance criteria (i.e., Allowable interference =", AI, ") is met.", 
+                sep = " ")
 }else if(sig.regs < 0.05 && direction <0){
   #negative linear interference
   y.goal <- M0 *(1-AI)
@@ -118,8 +119,10 @@ if (sig.regs < 0.05 && direction >0){
   x.goal <- inverse.predict(fit.lm, newdata = y.goal)
   x.goal <- x.goal$Prediction
   
-  msg <- "線性回歸顯著(p<0.05)，干擾方向為負向"
-  msg2 <- paste("以線性回歸推測干擾物濃度為:", x.goal, "以內不超過Allowable Interference:",AI, sep = " ")
+  msg <- "The result of linear regression is significant (p<0.05), and the interference is negative."
+  msg2 <- paste("Using the result of linear regression, when the interferent concentration is no higher than", x.goal, 
+                ", the acceptance criteria (i.e., Allowable interference =", AI, ") is met.", 
+                sep = " ")
   
   
 }else if(dircection > 0){
@@ -150,9 +153,10 @@ if (sig.regs < 0.05 && direction >0){
   
   x.goal <- down$Interferent_Added + x.add
   
-  msg <- "線性回歸不顯著(p>=0.05)，干擾方向為正向"
-  msg2 <- paste("以point-to-point推測干擾物濃度為:", x.goal, "以內不超過Allowable Interference:",AI, sep = " ")
-  
+  msg <- "The result of linear regression is not significant (p>=0.05)，and the interference is positive."
+  msg2 <- paste("Using point-to-point estimation, when the interferent concentration is no higher than", x.goal, 
+                ", the acceptance criteria (i.e., Allowable interference =", AI, ") is met.", 
+                sep = " ")
   
 }else if(direction < 0){
   #negative non-linear interference
@@ -183,8 +187,10 @@ if (sig.regs < 0.05 && direction >0){
   
   x.goal <- up$Interferent_Added + x.add
   
-  msg <- "線性回歸不顯著(p>=0.05)，干擾方向為負向"
-  msg2 <- paste("以point-to-point推測干擾物濃度為:", x.goal, "以內不超過Allowable Interference:",AI, sep = " ")
+  msg <- "The result of linear regression is not significant (p>=0.05)，and the interference is negative."
+  msg2 <- paste("Using point-to-point estimation, when the interferent concentration is no higher than", x.goal, 
+                ", the acceptance criteria (i.e., Allowable interference =", AI, ") is met.", 
+                sep = " ")
   
 }
 
@@ -192,7 +198,7 @@ if (sig.regs < 0.05 && direction >0){
 sink("Dose_Response_Analysis_Result.txt")
 msg
 msg2
-print("線性回歸報告：")
+print("Linear Regression Report：")
 fit.sum
 sink()
 
