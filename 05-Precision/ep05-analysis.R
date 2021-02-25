@@ -2,14 +2,12 @@
 Packages <- c("dplyr", "ggplot2", "VCA", "knitr")
 lapply(Packages, library, character.only = TRUE)
 
-#Set working directory
-DIR <- "ivd-ep-toolkit/05-Precision"
+#Set working directory using rstudioapi
+
+DIR <- dirname(rstudioapi::getSourceEditorContext()$path)
 TIME <- format(Sys.time(), "%Y-%m%d-%H%M%S")
 RPRT.DIR <- paste("Report", TIME, sep = "_")
-setwd("~")
-WD <- getwd()
-WD <- paste(WD, DIR, sep = "/")
-setwd(WD)
+setwd(DIR)
 
 #Read setting for analysis
 SET <- read.csv("setting.csv") #setting file name
