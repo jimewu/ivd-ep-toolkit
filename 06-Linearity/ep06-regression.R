@@ -1,16 +1,13 @@
 #Part 0. Preparations: configuration area
 #Load package needed
-Packages <- c("dplyr", "ggplot2")
+Packages <- c("dplyr", "ggplot2", "here")
 lapply(Packages, library, character.only = TRUE)
 
-#Set working directory
-DIR <- "ivd-ep-toolkit/06-Linearity"
+#Set working directory using rsudioapi
+DIR <- dirname(rstudioapi::getSourceEditorContext()$path)
 TIME <- format(Sys.time(), "%Y-%m%d-%H%M%S")
 RPRT.DIR <- paste("Report", TIME, sep = "_")
-setwd("~")
-WD <- getwd()
-WD <- paste(WD, DIR, sep = "/")
-setwd(WD)
+setwd(DIR)
 
 #Read setting for analysis
 SET <- read.csv("setting.csv")
