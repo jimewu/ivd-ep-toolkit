@@ -3,14 +3,11 @@
 Packages <- c("dplyr", "ggplot2", "ggExtra", "EnvStats", "knitr", "mcr")
 lapply(Packages, library, character.only = TRUE)
 
-#Set working directory
-DIR <- "ivd-ep-toolkit/09-Method-Comparison"
+#Set working directory using rstudioapi
+DIR <- dirname(rstudioapi::getSourceEditorContext()$path)
 TIME <- format(Sys.time(), "%Y-%m%d-%H%M%S")
-RPRT.DIR <- paste("Report_for_Method_Comparison", TIME, sep = "_")
-setwd("~")
-WD <- getwd()
-WD <- paste(WD, DIR, sep = "/")
-setwd(WD)
+RPRT.DIR <- paste("Report", TIME, sep = "_")
+setwd(DIR)
 
 #Read setting for analysis
 SET <- read.csv("setting.csv")

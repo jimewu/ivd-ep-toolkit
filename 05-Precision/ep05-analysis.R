@@ -3,7 +3,6 @@ Packages <- c("dplyr", "ggplot2", "VCA", "knitr")
 lapply(Packages, library, character.only = TRUE)
 
 #Set working directory using rstudioapi
-
 DIR <- dirname(rstudioapi::getSourceEditorContext()$path)
 TIME <- format(Sys.time(), "%Y-%m%d-%H%M%S")
 RPRT.DIR <- paste("Report", TIME, sep = "_")
