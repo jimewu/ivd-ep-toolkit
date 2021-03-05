@@ -56,7 +56,7 @@ for (X in DAT.SPL){
   Regression.2nd <- mean(X$P2)
   Regression.Diff = Regression.2nd - Regression.1st
   Regression.Perc.Diff <- 100 * Regression.Diff / Regression.1st
-  Regression_Diff_H_Goal <- y.Mean * Acceptance_Criteria
+  Regression_Diff_H_Goal <- Regression.1st * Acceptance_Criteria
   Regression_Diff_L_Goal <- Regression_Diff_H_Goal * -1
   
   RSLT <- c(Dilution, y.Mean, y.Diff, y.Diff.SQ, 
@@ -99,7 +99,7 @@ for (X in DAT.SPL){
   Regression.3rd <- mean(X$P3)
   Regression.Diff = Regression.3rd - Regression.1st
   Regression.Perc.Diff <- 100 * Regression.Diff / Regression.1st
-  Regression_Diff_H_Goal <- y.Mean * Acceptance_Criteria
+  Regression_Diff_H_Goal <- Regression.1st * Acceptance_Criteria
   Regression_Diff_L_Goal <- Regression_Diff_H_Goal * -1
   
   RSLT <- c(Dilution, y.Mean, y.Diff, y.Diff.SQ, 
